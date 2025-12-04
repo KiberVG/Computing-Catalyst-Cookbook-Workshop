@@ -12,10 +12,20 @@ import PrivateRoute from './components/PrivateRoute';
 import { recipesData } from './data/recipesData';
 
 export default function App() {
-  const [recipes, setRecipes] = useState(recipesData); // comment this out when using firebase
+  const [recipes, setRecipes] = useState([]); // comment this out when using firebase
   // WORKSHOP: Replace static data with Firestore data ///////////////////////////
 
+  useEffect(()=> {
 
+    async function getData() {
+      const querySnapshot = await getDocs(collection(db, "recipes"))
+      const recipesList = querySnapshot.docs.map(function (recipe) {
+        return {id: recipe.id, ...recipe.data()}
+      })
+      setRecipes(recipesList)
+    }
+    getData()
+  })
 
   // WORKSHOP: End of Firestore fetch logic
   const [favorites, setFavorites] = useState([]);

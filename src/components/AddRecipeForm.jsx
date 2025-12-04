@@ -24,7 +24,6 @@ export default function AddRecipeForm({ onAddRecipe }) {
     e.preventDefault();
 
     const newRecipe = {
-      id: Date.now(), // WORKSHOP: Firestore generates ID (need to do something with this line)
       ...form,
       prepTime: Number(form.prepTime),
       cookTime: Number(form.cookTime),
@@ -38,10 +37,11 @@ export default function AddRecipeForm({ onAddRecipe }) {
     try {
       // WORKSHOP: Add to Firestore (this one is a one liner) /////////////////////////
 
+      const docRef = await addDoc(collection(db, "recipes"), newRecipe)
 
 
       // Update local state via parent (change this to pass the new recipe with the generated ID)
-      onAddRecipe({ ...newRecipe });
+      onAddRecipe({ id: docRef.id, ...newRecipe });
       // WORKSHOP: End of Firestore add logic
       setForm({
         title: '',
